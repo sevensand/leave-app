@@ -1,26 +1,69 @@
-import path from 'path'
-
-export default {
-  devtools: 'eval-source-map',
+const path = require('path');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const devMode = process.env.NODE_ENV !== 'production';
+module.exports = {
   mode: 'development',
-  entry: path.join(__dirname, '/client/index.js'),
+  entry: [
+    // 'webpack-hot-middleware/client',
+    './client/index.js'
+  ],
   output: {
-    path: path.resolve('dist'),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   resolve: {
-  extensions: ['.js', '.jsx']
+  extensions: ['.js', '.jsx', '.css', '.scss']
 },
   module: {
     rules: [
         {
-            test: /\.jsx?$/,
-            exclude: /(node_modules|bower_components)/,
-            loader: 'babel-loader',
-            query: {
-                presets: ['react', 'es2015', 'stage-3']
-            }
-        }
+             test: /\.(js|jsx?)$/,
+             exclude: /node_modules/,
+             loader: 'babel-loader',
+             options: {
+            cacheDirectory: true,
+            plugins: 'react-hot-loader/babel',
+            },
+
+        },
+        {
+          test: /\.(sa|sc|c)ss$/,
+          exclude: /node_modules/,
+          use:[
+            {
+                loader: MiniCssExtractPlugin.loader
+            },
+            "css-loader",
+            "sass-loader",
+            'resolve-url-loader'
+          ],
+        },
+        {
+          test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+          use: "url-loader?limit=100000"
+      }
+
     ]
-  }
+  },
+  plugins: [
+    new htmlWebpackPlugin({
+    template:  './public/index.html',
+    filename: 'index.html',
+    inject: 'body'
+  }),
+  new MiniCssExtractPlugin({
+    filename: "[name].css",
+    chunkFilename: "[id].css"
+  }),
+  new webpack.NoEmitOnErrorsPlugin(),
+  new webpack.optimize.OccurrenceOrderPlugin(),
+  new webpack.HotModuleReplacementPlugin()
+],
+
+  devServer: {
+    historyApiFallback: true
+}
 }
