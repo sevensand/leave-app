@@ -4,6 +4,7 @@ import App from './components/App';
 import { Provider } from 'react-redux';
 import { store } from './components/_helpers/store.js';
 import style from './assets/scss/style.scss';
+import upimg from './assets/scss/upimg.scss';
 
 import "bootstrap";
 
