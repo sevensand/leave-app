@@ -3,6 +3,7 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const devMode = process.env.NODE_ENV !== 'production';
+
 module.exports = {
   mode: 'development',
   entry: [
@@ -44,8 +45,7 @@ module.exports = {
         {
           test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
           use: "url-loader?limit=100000"
-      }
-
+        }
     ]
   },
   plugins: [
